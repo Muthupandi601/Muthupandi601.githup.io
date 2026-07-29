@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard · Money Manager</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>" />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  (function () {
+    var t = localStorage.getItem("mms_theme");
+    if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    document.documentElement.classList.add("mms-auth-pending");
+  })();
+</script>
+</head>
+<body>
+
+<header class="app-header">
+  <nav class="app-nav">
+    <a href="index.html" class="brand"><span class="brand-icon">💰</span> Money Manager</a>
+    <div class="nav-links">
+      <a href="index.html">📊 Dashboard</a>
+      <a href="income.html">💵 Income</a>
+      <a href="expense.html">🧾 Expense</a>
+      <a href="saving.html">🏦 Savings</a>
+      <a href="debt.html">💳 Debt</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn lock-toggle" title="Lock now">🔒</button>
+      <button class="icon-btn theme-toggle" title="Toggle theme">🌙</button>
+      <button class="icon-btn nav-toggle" title="Menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<main class="app-main">
+  <div class="page-head">
+    <div>
+      <h1>Dashboard</h1>
+      <div class="subtitle">Your complete financial overview, all in one place.</div>
+    </div>
+  </div>
+
+  <section class="summary-grid">
+    <div class="stat-card income">
+      <div class="stat-top">
+        <span class="stat-label">Total Income</span>
+        <span class="stat-icon">💵</span>
+      </div>
+      <div class="stat-value" id="stat-income">₹0.00</div>
+      <div class="stat-sub" id="stat-income-sub">0 entries</div>
+    </div>
+    <div class="stat-card expense">
+      <div class="stat-top">
+        <span class="stat-label">Total Expense</span>
+        <span class="stat-icon">🧾</span>
+      </div>
+      <div class="stat-value" id="stat-expense">₹0.00</div>
+      <div class="stat-sub" id="stat-expense-sub">0 entries</div>
+    </div>
+    <div class="stat-card saving">
+      <div class="stat-top">
+        <span class="stat-label">Total Savings</span>
+        <span class="stat-icon">🏦</span>
+      </div>
+      <div class="stat-value" id="stat-saving">₹0.00</div>
+      <div class="stat-sub" id="stat-saving-sub">0 goals</div>
+    </div>
+    <div class="stat-card debt">
+      <div class="stat-top">
+        <span class="stat-label">Outstanding Debt</span>
+        <span class="stat-icon">💳</span>
+      </div>
+      <div class="stat-value" id="stat-debt">₹0.00</div>
+      <div class="stat-sub" id="stat-debt-sub">0 debts</div>
+    </div>
+    <div class="stat-card balance">
+      <div class="stat-top">
+        <span class="stat-label">Available Balance</span>
+        <span class="stat-icon">⚖️</span>
+      </div>
+      <div class="stat-value" id="stat-balance">₹0.00</div>
+      <div class="stat-sub">Income − Expense − Savings − Debt Payments</div>
+    </div>
+  </section>
+
+  <h2 class="section-title">Overview</h2>
+  <section class="charts-grid">
+    <div class="card chart-card">
+      <h3>Expense by Category</h3>
+      <canvas id="chart-expense-category" height="220"></canvas>
+      <div class="chart-legend" id="legend-expense-category"></div>
+    </div>
+    <div class="card chart-card">
+      <h3>Last 6 Months: Income, Expense, Savings &amp; Debt Payments</h3>
+      <canvas id="chart-monthly-trend" height="220"></canvas>
+      <div class="chart-legend">
+        <span class="legend-item"><span class="legend-dot" style="background:var(--income)"></span>Income</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--expense)"></span>Expense</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--saving)"></span>Savings</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--debt)"></span>Debt Payments</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="two-col">
+    <div>
+      <h2 class="section-title">Savings Goals</h2>
+      <div class="goals-grid" id="dash-goals"></div>
+
+      <h2 class="section-title">Debts</h2>
+      <div class="goals-grid" id="dash-debts"></div>
+    </div>
+    <div>
+      <h2 class="section-title">Recent Transactions</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th class="num">Amount</th>
+            </tr>
+          </thead>
+          <tbody id="recent-tx-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Statement</h2>
+  <div class="card">
+    <p class="subtitle" style="margin-bottom:1rem;color:var(--text-muted);font-size:0.85rem;">
+      Export a full account statement as PDF: total income, expense, savings, debt payments, available balance, and a chronological transaction ledger with running balance.
+    </p>
+    <div class="settings-actions">
+      <button class="btn btn-primary" id="btn-export-statement">📄 Export Full Statement (PDF)</button>
+    </div>
+  </div>
+
+  <h2 class="section-title">Data Management</h2>
+  <div class="card">
+    <p class="subtitle" style="margin-bottom:1rem;color:var(--text-muted);font-size:0.85rem;">
+      Everything is stored locally in your browser (localStorage). Back up your data as a JSON file, restore it later, or try the app with sample data.
+    </p>
+    <div class="settings-actions">
+      <button class="btn btn-secondary" id="btn-export">⬇️ Export Data</button>
+      <button class="btn btn-secondary" id="btn-import">⬆️ Import Data</button>
+      <input type="file" id="file-import" accept="application/json" hidden />
+      <button class="btn btn-secondary" id="btn-demo">✨ Load Demo Data</button>
+      <button class="btn btn-danger" id="btn-clear">🗑️ Clear All Data</button>
+    </div>
+  </div>
+
+  <p class="footer-note">Money Manager · data stays on this device only</p>
+</main>
+
+<script src="js/storage.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/print.js"></script>
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

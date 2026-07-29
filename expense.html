@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Expense · Money Manager</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>" />
+<link rel="stylesheet" href="css/style.css" />
+<script>
+  (function () {
+    var t = localStorage.getItem("mms_theme");
+    if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+    document.documentElement.classList.add("mms-auth-pending");
+  })();
+</script>
+</head>
+<body>
+
+<header class="app-header">
+  <nav class="app-nav">
+    <a href="index.html" class="brand"><span class="brand-icon">💰</span> Money Manager</a>
+    <div class="nav-links">
+      <a href="index.html">📊 Dashboard</a>
+      <a href="income.html">💵 Income</a>
+      <a href="expense.html">🧾 Expense</a>
+      <a href="saving.html">🏦 Savings</a>
+      <a href="debt.html">💳 Debt</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn lock-toggle" title="Lock now">🔒</button>
+      <button class="icon-btn theme-toggle" title="Toggle theme">🌙</button>
+      <button class="icon-btn nav-toggle" title="Menu">☰</button>
+    </div>
+  </nav>
+</header>
+
+<main class="app-main">
+  <div class="page-head">
+    <div>
+      <h1>Expense</h1>
+      <div class="subtitle">See where your money goes.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <section class="summary-grid" style="grid-template-columns:1fr;">
+        <div class="stat-card expense">
+          <div class="stat-top"><span class="stat-label">Total Expense</span><span class="stat-icon">🧾</span></div>
+          <div class="stat-value" id="stat-total">₹0.00</div>
+          <div class="stat-sub" id="stat-count">0 entries</div>
+        </div>
+        <div class="stat-card expense">
+          <div class="stat-top"><span class="stat-label">This Month</span><span class="stat-icon">📅</span></div>
+          <div class="stat-value" id="stat-month">₹0.00</div>
+          <div class="stat-sub">Current calendar month</div>
+        </div>
+        <div class="stat-card expense">
+          <div class="stat-top"><span class="stat-label">Top Category</span><span class="stat-icon">🏷️</span></div>
+          <div class="stat-value" id="stat-top-category" style="font-size:1.15rem;">—</div>
+          <div class="stat-sub" id="stat-top-category-sub">No data yet</div>
+        </div>
+      </section>
+    </div>
+    <div class="card chart-card">
+      <h3>Expense by Category</h3>
+      <canvas id="chart-category" height="220"></canvas>
+      <div class="chart-legend" id="legend-category"></div>
+    </div>
+  </div>
+
+  <h2 class="section-title" id="form-title">Add Expense</h2>
+  <form class="card" id="expense-form" novalidate>
+    <div class="form-grid">
+      <div class="field">
+        <label for="f-date">Date</label>
+        <input type="date" id="f-date" required />
+      </div>
+      <div class="field">
+        <label for="f-category">Category</label>
+        <select id="f-category"></select>
+      </div>
+      <div class="field">
+        <label for="f-amount">Amount (₹)</label>
+        <input type="number" id="f-amount" min="0.01" step="0.01" placeholder="0.00" required />
+      </div>
+      <div class="field full">
+        <label for="f-note">Note (optional)</label>
+        <textarea id="f-note" maxlength="200" placeholder="What was this expense for?"></textarea>
+      </div>
+      <div class="field-error full" id="form-error"></div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="btn-submit">➕ Add Expense</button>
+        <button type="button" class="btn btn-ghost" id="btn-cancel-edit" hidden>Cancel</button>
+      </div>
+    </div>
+  </form>
+
+  <h2 class="section-title">All Expense Entries</h2>
+  <div class="toolbar">
+    <input type="text" id="filter-search" class="search-input" placeholder="🔍 Search note..." />
+    <select id="filter-category"><option value="">All categories</option></select>
+    <input type="month" id="filter-month" />
+    <div class="spacer"></div>
+    <button class="btn btn-secondary btn-sm" id="btn-clear-filters">Clear filters</button>
+    <button class="btn btn-secondary btn-sm" id="btn-export-pdf">📄 Export PDF</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Note</th>
+          <th class="num">Amount</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="expense-body"></tbody>
+    </table>
+  </div>
+
+  <p class="footer-note">Money Manager · data stays on this device only</p>
+</main>
+
+<script src="js/storage.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/print.js"></script>
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/expense.js"></script>
+</body>
+</html>
